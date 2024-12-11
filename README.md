@@ -14,8 +14,8 @@ Supports pagination for the search results.
 
 Generates a word cloud based on selected month/year or the entire year.
 
-![Alt text](screenshots/searchpage.png)
-![Alt text](screenshots/wordcloud.png)
+![Alt text](Search-wordstream/screenshots/searchpage.png)
+![Alt text](Search-wordstream/screenshots/wordcloud.png)
 
 ## Requirements
 
