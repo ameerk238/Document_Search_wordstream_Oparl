@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PAGE 1: Search field + Word Cloud & Result list</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .menu-bar {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        .menu-bar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-bar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .page-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+        }
+
+        #search-form, #word-cloud-form {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 70%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        li strong {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        li p {
+            margin: 0;
+        }
+
+        .document {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .document > strong {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .document > div {
+            margin: 3px 0;
+        }
+
+        .document > div > strong {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        #word-cloud-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 70%;
+            height: 70%;
+            border: 1px solid #ccc;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        #word-cloud-img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+
+        #pagination-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #pagination-controls button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        #pagination-controls button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <a onclick="showDefaultPage()">Search Page</a>
+        <a onclick="showAdditionalPage()">Word Cloud</a>
+    </div>
+    <div id="default-page">
+        <h1>Search Engine</h1>
+        <form id="search-form">
+            <input type="text" name="query" placeholder="Enter your search text">
+            <input type="submit" value="Search">
+        </form>
+
+        <div id="search-results-container">
+            <div id="search-results"></div>
+        </div>
+
+        <div id="pagination-controls">
+            <button id="prev-btn" disabled>Previous</button>
+            <button id="next-btn" disabled>Next</button>
+        </div>
+    </div>
+
+    <div id="additional-page" style="display:none;">
+        <h1>Word Cloud & Graph</h1>
+        <form id="word-cloud-form">
+            <select name="month-year">
+                <option value="2022-01">January 2022</option>
+                <option value="2022-02">February 2022</option>
+                <option value="2022-03">March 2022</option>
+                <option value="2022-04">April 2022</option>
+                <option value="2022-05">May 2022</option>
+                <option value="2022-06">June 2022</option>
+                <option value="2022-07">July 2022</option>
+                <option value="2022-08">August 2022</option>
+                <option value="2022-09">September 2022</option>
+                <option value="2022-10">October 2022</option>
+                <option value="2022-11">November 2022</option>
+                <option value="2022-12">December 2022</option>
+                <option value="2022">Year 2022</option> 
+            </select>
+            <input type="submit" value="Generate Word Cloud">
+        </form>
+
+        <div id="word-cloud-container" style="display:none;">
+            <img id="word-cloud-img" src="" alt="Word Cloud">
+        </div>
+    </div>
+
+    <script>
+        function showDefaultPage() {
+            document.getElementById('default-page').style.display = 'block';
+            document.getElementById('additional-page').style.display = 'none';
+        }
+
+        function showAdditionalPage() {
+            document.getElementById('default-page').style.display = 'none';
+            document.getElementById('additional-page').style.display = 'block';
+        }
+
+        // Rest of your JavaScript code...
+    </script>
+
+    <script>
+
+        const searchForm = document.getElementById('search-form');
+        const searchResultsDiv = document.getElementById('search-results');
+        let currentPage = 1;  // Start from page 1
+        let totalPages = 1;   // Placeholder value, will be updated based on search results
+
+        document.getElementById('prev-btn').addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchSearchResults();
+            }
+        });
+
+        document.getElementById('next-btn').addEventListener('click', function() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                fetchSearchResults();
+            }
+        });
+
+        function fetchSearchResults() {
+            const query = searchForm.querySelector('input[name="query"]').value;
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query, page: currentPage })
+            })
+            .then(response => response.text())
+            .then(data => {
+                searchResultsDiv.innerHTML = `<ul>${data}</ul>`;
+                updatePaginationControls();
+            })
+            .catch(error => {
+                console.error('Error fetching search results:', error);
+            });
+        }
+
+        function fetchTotalCount() {
+            const query = searchForm.querySelector('input[name="query"]').value;
+            fetch('/search-count', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(count => {
+                totalPages = Math.ceil(count / 10);
+                updatePaginationControls();
+            })
+            .catch(error => {
+                console.error('Error fetching total count:', error);
+            });
+        }
+
+        function updatePaginationControls() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            // Enable or disable the previous button based on the current page
+            if (currentPage <= 1) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+
+            // Enable or disable the next button based on the current page and total pages
+            if (currentPage >= totalPages) {
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.disabled = false;
+            }
+        }
+
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            currentPage = 1;  // Reset to page 1 on a new search
+            fetchSearchResults();
+            fetchTotalCount();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            
+
+            const wordCloudContainer = document.getElementById('word-cloud-container');
+            const wordCloudForm = document.getElementById('word-cloud-form');
+            const wordCloudImg = document.getElementById('word-cloud-img');
+
+            wordCloudForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const monthYear = wordCloudForm.querySelector('select[name="month-year"]').value;
+                fetch('/generate-word-cloud', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ date: monthYear })
+                })
+                .then(response => response.blob())
+                .then(blob => {
+                    const objectURL = URL.createObjectURL(blob);
+                    wordCloudImg.src = objectURL;
+                    wordCloudContainer.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error generating word cloud:', error);
+                });
+            });    
+        });
+    </script>
+</body>
+</html>
+
